@@ -25,9 +25,9 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
-      - AIRFLOW_VAR_STOCK_API_KEY=FCQBK9LLL0NO5LY1
-      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
-      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW_VAR_STOCK_API_KEY=${AIRFLOW_VAR_STOCK_API_KEY}
+      - AIRFLOW_VAR_FERNET_KEY=${AIRFLOW_VAR_FERNET_KEY}
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
@@ -49,9 +49,9 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
-      - AIRFLOW_VAR_STOCK_API_KEY=FCQBK9LLL0NO5LY1
-      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
-      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW_VAR_STOCK_API_KEY=${AIRFLOW_VAR_STOCK_API_KEY}
+      - AIRFLOW_VAR_FERNET_KEY=${AIRFLOW_VAR_FERNET_KEY}
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
@@ -68,8 +68,8 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
-      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
-      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW_VAR_FERNET_KEY=${AIRFLOW_VAR_FERNET_KEY}
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
     volumes:
       - ./dags:/opt/airflow/dags
     depends_on:

@@ -36,16 +36,18 @@ The DAG is scheduled to run every hour, ensuring the stock data is refreshed reg
     cd <your_project_directory>
     ```
 
-2.  **Set up the API Key:**
-    * This project uses the Alpha Vantage API. You need to obtain a free API key from their website.
-    * The `docker-compose.yml` file contains a placeholder API key (`FCQBK9LLL0NO5LY1`) which is for demonstration purposes. **You should replace this with your own key** in both the `airflow-webserver` and `airflow-scheduler` services within the `docker-compose.yml` file.
+2.  **Set up the environment variables:**
+    * This project uses environment variables to manage sensitive data like API keys and secret keys.
+    * Rename the `Stock-data.env` file to `.env`.
+    * Open the newly renamed `.env` file and replace the placeholder values with your own keys:
+      * [cite_start]**`AIRFLOW_VAR_FERNET_KEY`**: You can generate this by running the command `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`[cite: 2].
+      * [cite_start]**`AIRFLOW__WEBSERVER__SECRET_KEY`**: This should be a random string[cite: 3].
+      * **`AIRFLOW_VAR_STOCK_API_KEY`**: Obtain a free API key from the Alpha Vantage website.
 
 3.  **Run the services:**
     This command will build the Docker image and start all the services defined in `docker-compose.yml` (Postgres, Airflow webserver, scheduler, and initializer).
     ```bash
     docker compose up -d
-    
-
     ```
 
 4.  **Access the Airflow UI:**
@@ -65,3 +67,6 @@ The DAG is scheduled to run every hour, ensuring the stock data is refreshed reg
 * **Port:** `5434` (mapped to `5432` inside the container)
 
 The `stock_api_script.py` connects to the database using these environment variables, which are set in the `docker-compose.yml` file.
+
+Contact 
+Email:deepakr0320@gmail.com
