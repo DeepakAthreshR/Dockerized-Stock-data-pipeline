@@ -1,0 +1,80 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: stock-postgres
+    environment:
+      - POSTGRES_USER=stock_user
+      - POSTGRES_PASSWORD=stock_password
+      - POSTGRES_DB=stock_data
+    ports:
+      - "5434:5432"
+    volumes:
+      - stock_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  airflow-webserver:
+    build: .
+    container_name: stock-airflow-webserver
+    ports:
+      - "8082:8080"
+    command: webserver
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
+      - AIRFLOW_VAR_STOCK_API_KEY=FCQBK9LLL0NO5LY1
+      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  airflow-scheduler:
+    build: .
+    container_name: stock-airflow-scheduler
+    command: scheduler
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
+      - AIRFLOW_VAR_STOCK_API_KEY=FCQBK9LLL0NO5LY1
+      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-init:
+    build: .
+    container_name: stock-airflow-init
+    command: bash -c "airflow db migrate && airflow users create --username airflow --password airflow --firstname Airflow --lastname Airflow --role Admin --email airflow@example.com"
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://stock_user:stock_password@postgres/stock_data
+      - AIRFLOW_VAR_FERNET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=Vk56Ym5TUzhWOXFOTHlJNUVSS1hmUUxLWmlmTGc1RWRxOHpXeUVRWkhYVT0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  stock_postgres_data:
