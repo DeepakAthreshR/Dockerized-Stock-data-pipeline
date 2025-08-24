@@ -47,6 +47,7 @@ The DAG is scheduled to run every hour, ensuring the stock data is refreshed reg
 3.  **Run the services:**
     This command will build the Docker image and start all the services defined in `docker-compose.yml` (Postgres, Airflow webserver, scheduler, and initializer).
     ```bash
+    docker compose up -d --build
     docker compose up -d
     ```
 
